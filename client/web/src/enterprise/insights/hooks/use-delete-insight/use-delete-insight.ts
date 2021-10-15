@@ -4,7 +4,7 @@ import { PlatformContextProps } from '@sourcegraph/shared/src/platform/context'
 import { SettingsCascadeProps } from '@sourcegraph/shared/src/settings/settings'
 import { ErrorLike } from '@sourcegraph/shared/src/util/errors'
 
-import { CodeInsightsBackendContext } from '../../core/backend/code-insights-backend-context';
+import { CodeInsightsBackendContext } from '../../core/backend/code-insights-backend-context'
 import { Insight } from '../../core/types'
 
 export interface UseDeleteInsightProps extends SettingsCascadeProps, PlatformContextProps<'updateSettings'> {}
@@ -20,7 +20,6 @@ export interface UseDeleteInsightAPI {
  * that include this insight.
  */
 export function useDeleteInsight(): UseDeleteInsightAPI {
-
     const { deleteInsight } = useContext(CodeInsightsBackendContext)
 
     const [loading, setLoading] = useState<boolean>(false)
