@@ -4,6 +4,7 @@ set -ex -o nounset -o pipefail
 export IGNITE_VERSION=v0.10.0
 export KERNEL_IMAGE="weaveworks/ignite-kernel:5.10.51"
 export EXECUTOR_FIRECRACKER_IMAGE="sourcegraph/ignite-ubuntu:insiders"
+export EXPORTER_EXPORTER_VERSION=v0.4.5
 
 ## Install ops agent
 ## Reference: https://cloud.google.com/logging/docs/agent/ops-agent/installation
@@ -92,6 +93,7 @@ Restart=on-failure
 EnvironmentFile=/etc/systemd/system/executor.env
 Environment=HOME="%h"
 Environment=SRC_LOG_LEVEL=dbug
+Environment=SRC_PROF_HTTP=127.0.0.1:6060
 Environment=EXECUTOR_FIRECRACKER_IMAGE="${EXECUTOR_FIRECRACKER_IMAGE}"
 
 [Install]
@@ -122,6 +124,42 @@ EOF
 
   # Ensure systemd can execute shutdown script
   chmod +x /shutdown_executor.sh
+}
+
+function install_exporter_exporter() {
+  useradd --system --shell /bin/false exporter_exporter
+
+  wget https://github.com/QubitProducts/exporter_exporter/releases/download/v${EXPORTER_EXPORTER_VERSION}/exporter_exporter-${EXPORTER_EXPORTER_VERSION}.linux-amd64.tar.gz
+  tar xvfz exporter_exporter-${EXPORTER_EXPORTER_VERSION}.linux-amd64.tar.gz
+  mv exporter_exporter-${EXPORTER_EXPORTER_VERSION}.linux-amd64/exporter_exporter /usr/local/bin/exporter_exporter
+  rm -rf exporter_exporter-${EXPORTER_EXPORTER_VERSION}.linux-amd64 exporter_exporter-${EXPORTER_EXPORTER_VERSION}.linux-amd64.tar.gz
+
+  chown exporter_exporter:exporter_exporter /usr/local/bin/exporter_exporter
+
+  cat <<EOF >/usr/local/bin/exporter_exporter.yaml
+modules:
+  node:
+    method: http
+    http:
+      port: 9100
+  executor:
+    method: http
+    http:
+      port: 6060
+EOF
+
+  cat <<EOF >/etc/systemd/system/exporter_exporter.service
+[Unit]
+Description=Exporter Exporter
+[Service]
+User=exporter_exporter
+ExecStart=/usr/local/bin/exporter_exporter -config.file "/usr/local/bin/exporter_exporter.yaml"
+[Install]
+WantedBy=multi-user.target
+EOF
+
+  systemctl daemon-reload
+  systemctl enable exporter_exporter
 }
 
 ## Build the ignite-ubuntu image for use in firecracker.
