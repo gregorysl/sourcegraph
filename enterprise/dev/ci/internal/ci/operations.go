@@ -615,7 +615,7 @@ func publishExecutor(version string, skipHashCompare bool) operations.Operation 
 func uploadBuildLogs() operations.Operation {
 	return func(pipeline *bk.Pipeline) {
 		stepOpts := []bk.StepOpt{
-			bk.Env("LOKI_URL", "http://98fa-78-203-27-81.ngrok.io"),
+			bk.Env("LOKI_URL", "http://f532-78-203-27-81.ngrok.io"),
 			bk.AllowDependencyFailure(),
 		}
 		stepOpts = append(stepOpts,
