@@ -3,6 +3,7 @@ package bk
 import (
 	"context"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -23,6 +24,12 @@ type buildkiteSecrets struct {
 
 // retrieveToken obtains a token either from the cached configuration or by asking the user for it.
 func retrieveToken(ctx context.Context, out *output.Output) (string, error) {
+	// TODO(JH) fix that
+	ttok := os.Getenv("BUILDKITE_API_TOKEN")
+	if ttok != "" {
+		return ttok, nil
+	}
+
 	sec := secrets.FromContext(ctx)
 	bkSecrets := buildkiteSecrets{}
 	err := sec.Get("buildkite", &bkSecrets)
