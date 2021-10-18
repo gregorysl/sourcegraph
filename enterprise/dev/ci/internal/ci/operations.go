@@ -620,6 +620,7 @@ func uploadBuildLogs() operations.Operation {
 		}
 		stepOpts = append(stepOpts,
 			// bk.Cmd("sg ci logs --output $LOKI_URL"))
+			bk.Cmd("pwd"),
 			bk.Cmd("./entreprise/dev/upload-build-logs.sh"))
 
 		pipeline.AddWait()
