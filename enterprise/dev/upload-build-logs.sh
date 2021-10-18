@@ -3,8 +3,7 @@
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"/../..
 
-echo "--- :cog: building sg"
-
+echo "--- :go: Building sg"
 (
   set -x
   pushd dev/sg
@@ -12,6 +11,5 @@ echo "--- :cog: building sg"
   popd
 )
 
-echo "--- :arrow_up: uploading logs if build failed"
-
+echo "--- :arrow_up: Uploading logs (if build failed)"
 ./ci_sg ci logs --out=$LOKI_URL --state="failed"
