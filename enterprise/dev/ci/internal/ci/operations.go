@@ -623,7 +623,8 @@ func uploadBuildLogs() operations.Operation {
 			bk.Cmd("pwd"),
 			bk.Cmd("./enterprise/dev/upload-build-logs.sh"))
 
-		pipeline.AddWait()
+		pipeline.AddStep(":red: simulate failure", bk.Cmd("wfenpwfpw"))
+		pipeline.AddWaitAnyway()
 		pipeline.AddStep(":file_cabinet: Uploading build logs", stepOpts...)
 	}
 }

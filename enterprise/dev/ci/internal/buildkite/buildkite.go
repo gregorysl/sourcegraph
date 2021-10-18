@@ -222,6 +222,15 @@ func (p *Pipeline) AddWait() {
 	p.Steps = append(p.Steps, "wait")
 }
 
+// TODO(JH) clean
+func (p *Pipeline) AddWaitAnyway() {
+	p.Steps = append(p.Steps, map[string]interface{}{
+		"wait":                nil,
+		"continue_on_failure": true,
+	})
+
+}
+
 func Key(key string) StepOpt {
 	return func(step *Step) {
 		step.Key = key
