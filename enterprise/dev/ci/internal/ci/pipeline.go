@@ -227,6 +227,9 @@ func GeneratePipeline(c Config) (*bk.Pipeline, error) {
 	pipeline := &bk.Pipeline{
 		Env: env,
 	}
+
+	ops.Append(uploadBuildLogs())
+
 	ops.Apply(pipeline)
 	return pipeline, nil
 }

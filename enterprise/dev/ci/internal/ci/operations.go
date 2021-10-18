@@ -611,3 +611,18 @@ func publishExecutor(version string, skipHashCompare bool) operations.Operation 
 		pipeline.AddStep(":packer: :white_check_mark: executor image", stepOpts...)
 	}
 }
+
+func uploadBuildLogs() operations.Operation {
+	return func(pipeline *bk.Pipeline) {
+		stepOpts := []bk.StepOpt{
+			bk.Env("LOKI_URL", "http://98fa-78-203-27-81.ngrok.io"),
+			bk.AllowDependencyFailure(),
+		}
+		stepOpts = append(stepOpts,
+			// bk.Cmd("sg ci logs --output $LOKI_URL"))
+			bk.Cmd("./entreprise/dev/upload-build-logs.sh"))
+
+		pipeline.AddWait()
+		pipeline.AddStep(":file_cabinet: Uploading build logs", stepOpts...)
+	}
+}
