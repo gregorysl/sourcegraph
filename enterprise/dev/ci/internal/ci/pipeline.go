@@ -97,7 +97,7 @@ func GeneratePipeline(c Config) (*bk.Pipeline, error) {
 			ops.Append(triggerAsync(buildOptions))
 		}
 
-		ops.Merge(CoreTestOperations(c.ChangedFiles, CoreTestOperationsOptions{}))
+		// ops.Merge(CoreTestOperations(c.ChangedFiles, CoreTestOperationsOptions{}))
 
 	case BackendIntegrationTests:
 		ops.Append(
@@ -227,7 +227,6 @@ func GeneratePipeline(c Config) (*bk.Pipeline, error) {
 	pipeline := &bk.Pipeline{
 		Env: env,
 	}
-
 	ops.Append(uploadBuildLogs())
 
 	ops.Apply(pipeline)

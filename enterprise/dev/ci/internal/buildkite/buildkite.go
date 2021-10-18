@@ -229,7 +229,6 @@ func (p *Pipeline) AddEnsure() {
 		"wait":                nil,
 		"continue_on_failure": true,
 	})
-
 }
 
 func Key(key string) StepOpt {
