@@ -222,8 +222,9 @@ func (p *Pipeline) AddWait() {
 	p.Steps = append(p.Steps, "wait")
 }
 
-// TODO(JH) clean
-func (p *Pipeline) AddWaitAnyway() {
+// AddEnsure acts like AddWait, but subsequent steps are ran even if there was
+// a failure in the earlier steps.
+func (p *Pipeline) AddEnsure() {
 	p.Steps = append(p.Steps, map[string]interface{}{
 		"wait":                nil,
 		"continue_on_failure": true,

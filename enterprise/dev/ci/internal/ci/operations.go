@@ -598,7 +598,7 @@ func publishExecutor(version string, skipHashCompare bool) operations.Operation 
 			bk.Env("VERSION", version),
 		}
 		if !skipHashCompare {
-			// Publish iff not soft-failed on previous step
+			// Publish if not soft-failed on previous step
 			checkDependencySoftFailScript := "./enterprise/dev/ci/scripts/check-dependency-soft-fail.sh"
 			stepOpts = append(stepOpts,
 				// Soft-fail with code 222 if nothing has changed
@@ -615,14 +615,14 @@ func publishExecutor(version string, skipHashCompare bool) operations.Operation 
 func uploadBuildLogs() operations.Operation {
 	return func(pipeline *bk.Pipeline) {
 		stepOpts := []bk.StepOpt{
-			bk.Env("LOKI_URL", "http://f532-78-203-27-81.ngrok.io"),
+			bk.Env("LOKI_URL", "http://7f7b-78-203-27-81.ngrok.io"),
 			bk.AllowDependencyFailure(),
 		}
 		stepOpts = append(stepOpts,
 			bk.Cmd("./enterprise/dev/upload-build-logs.sh"))
 
-		// pipeline.AddStep(":red: simulate failure", bk.Cmd("wfenpwfpw"))
-		pipeline.AddWaitAnyway()
+		pipeline.AddStep(":red: simulate failure", bk.Cmd("wfenpwfpw"))
+		pipeline.AddEnsure()
 		pipeline.AddStep(":file_cabinet: Uploading build logs", stepOpts...)
 	}
 }

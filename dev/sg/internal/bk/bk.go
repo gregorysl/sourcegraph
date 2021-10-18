@@ -24,10 +24,9 @@ type buildkiteSecrets struct {
 
 // retrieveToken obtains a token either from the cached configuration or by asking the user for it.
 func retrieveToken(ctx context.Context, out *output.Output) (string, error) {
-	// TODO(JH) fix that
-	ttok := os.Getenv("BUILDKITE_API_TOKEN")
-	if ttok != "" {
-		return ttok, nil
+	if tok := os.Getenv("BUILDKITE_API_TOKEN"); tok != "" {
+		// If the token is provided by the environment, use that one.
+		return tok, nil
 	}
 
 	sec := secrets.FromContext(ctx)

@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 
-set -eu
+set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"/../..
 
-echo "--- building sg"
-pushd dev/sg
-go build -o ../../ci_sg -ldflags "-X main.BuildCommit=$BUILDKITE_COMMIT" -mod=mod .
-popd
+echo "--- :cog: building sg"
 
-echo "--- uploading logs if build failed"
+(
+  set -x
+  pushd dev/sg
+  go build -o ../../ci_sg -ldflags "-X main.BuildCommit=$BUILDKITE_COMMIT" -mod=mod .
+  popd
+)
+
+echo "--- :arrow_up: uploading logs if build failed"
+
 ./ci_sg ci logs --out=$LOKI_URL --state="failed"
