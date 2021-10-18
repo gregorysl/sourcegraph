@@ -7,4 +7,4 @@ pushd dev/sg
 go build -o ../../ci_sg -ldflags "-X main.BuildCommit=$BUILDKITE_COMMIT" -mod=mod .
 popd
 
-./ci_sg ci logs --out=$LOKI_URL --state=""
+./ci_sg ci logs --out=$LOKI_URL --state="failed"
