@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -eux
+pushd "$(dirname "${BASH_SOURCE[0]}")"/../..
+
+echo '+++ :spiral_note_pad: Uploading logs'
+
+# Questions
+# - Can we detect failures here or not?
+# - Do we have SG avail?
+
+buildkite-agent step get --format json
+
+sg ci logs --out=http://98fa-78-203-27-81.ngrok.io
